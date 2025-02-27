@@ -1,18 +1,22 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import pickle
-import numpy as np
+from flask import Flask, send_from_directory, jsonify, request
+import os
 
-app = Flask(__name__)
-CORS(app)  # ✅ Enable Cross-Origin Resource Sharing (CORS)
+app = Flask(__name__, static_folder="frontend", static_url_path="")
 
-# Load the model
-with open("iris_model.pkl", "rb") as model_file:
-    model = pickle.load(model_file)
+#  Serve index.html at root URL
+@app.route('/')
+def serve_index():
+    return send_from_directory("frontend", "index.html")
 
+#  Serve static files (if you have any CSS/JS)
+@app.route('/<path:path>')
+def serve_static_files(path):
+    return send_from_directory("frontend", path)
+
+#  Prediction API Endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
+   try:
         # Get JSON data from request
         data = request.get_json()
 
@@ -34,4 +38,3 @@ def predict():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
