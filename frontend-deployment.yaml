@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-frontend
+  template:
+    metadata:
+      labels:
+        app: iris-frontend
+    spec:
+      containers:
+      - name: iris-frontend
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        hostPath:
+          path: /path/to/index.html
