@@ -42,7 +42,7 @@
             };
 
             try {
-                const response = await fetch("https://iris-ml-app-8032deeca5dc.herokuapp.com/", {
+                const response = await fetch("https://iris-ml-app-8032deeca5dc.herokuapp.com/predict", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data)
