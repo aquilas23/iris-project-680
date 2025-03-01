@@ -10,8 +10,7 @@ CORS(app)
 label_dict = {0: "Iris-setosa", 1: 'Iris-versicolor', 2: 'Iris-virginica'}
 
 
-# model = joblib.load("iris_model.pkl") 
-    model = joblib.load("model.joblib") 
+model = joblib.load("iris_model.pkl") 
     
 
 #  Serve index.html at root URL
