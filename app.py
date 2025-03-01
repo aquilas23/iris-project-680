@@ -1,7 +1,17 @@
 from flask import Flask, send_from_directory, jsonify, request
 import os
+from flask_cors import CORS
+import pickle as pkl
+import joblib
 
 app = Flask(__name__, static_folder="frontend", static_url_path="")
+CORS(app)
+
+label_dict = {0: "Iris-setosa", 1: 'Iris-versicolor', 2: 'Iris-virginica'}
+
+
+model = joblib.load("iris_model.pkl") 
+    
 
 #  Serve index.html at root URL
 @app.route('/')
@@ -16,25 +26,10 @@ def serve_static_files(path):
 #  Prediction API Endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
-   try:
-        # Get JSON data from request
-        data = request.get_json()
-
-        # Ensure all fields exist
-        if not all(k in data for k in ("sepal_length", "sepal_width", "petal_length", "petal_width")):
-            return jsonify({"error": "Missing input data"}), 400
-
-        # Convert input into NumPy array
-        features = np.array([[data["sepal_length"], data["sepal_width"], data["petal_length"], data["petal_width"]]])
-
-        # Make prediction
-        prediction = model.predict(features)
-
-        # Return response
-        return jsonify({"prediction": prediction[0]})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    data = request.get_json()
+    print(model.__dir__)
+    predictions = label_dict[model.predict([data['features']])[0]]
+    return jsonify({"message": "Prediction endpoint is working", "received_data": data, "prediction": predictions})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
